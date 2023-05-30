@@ -21,7 +21,7 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
     throw new Error('Failed to created a user!')
   }
 
-  return await creteUser
+  return creteUser
 }
 
 export default {
