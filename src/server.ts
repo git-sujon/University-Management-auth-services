@@ -1,31 +1,20 @@
 import mongoose from 'mongoose'
-import app from './app';
-import config from './config';
+import app from './app'
+import config from './config'
 
-
-
-
-
-const port =config.port
-
-
-
-
-
+const port = config.port
 
 async function connectToMongoDB() {
   try {
-    await mongoose.connect(`${config.database_url}`);
-    console.log("Database Connection Successfully");
+    await mongoose.connect(`${config.database_url}`)
+    console.log('Database Connection Successfully')
 
     app.listen(port, () => {
-        console.log(`listening on port ${port}`)
-      })
-
-
+      console.log(`listening on port ${port}`)
+    })
   } catch (error) {
-    console.log("Database connection Error:", error);
+    console.log('Database connection Error:', error)
   }
 }
 
-connectToMongoDB().catch((err) => console.log(err));
+connectToMongoDB().catch(err => console.log(err))
