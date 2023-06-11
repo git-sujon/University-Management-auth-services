@@ -1,36 +1,28 @@
-import express from 'express'
-import cors from 'cors'
-import globalErrorHandler from './app/middlewares/globalErrorHandler'
-import { userRoute } from './app/modules/user/user.route'
-import APIError from './errors/ApiErrors'
+import express from 'express';
+import cors from 'cors';
+import globalErrorHandler from './app/middlewares/globalErrorHandler';
+import { userRoute } from './app/modules/user/user.route';
 
-const app = express()
+const app = express();
 
-app.use(cors())
+app.use(cors());
 
 //  parser
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // application routes
 
-app.use('/api/v1/users/', userRoute)
+app.use('/api/v1/users/', userRoute);
 
+// // test route
+// app.get('/', (req: Request, res: Response, next:NextFunction) => {
+//  throw new Error ("Test New Error ")
 
+// })
 
+// global error
 
-// test route
-app.get('/', (req: Request, res: Response, next:NextFunction) => {
- throw new Error ("Banaj jjjd ")
+app.use(globalErrorHandler);
 
-})
-
-
-// global error 
-
-app.use(globalErrorHandler)
-
-
-
-export default app
- 
+export default app;
