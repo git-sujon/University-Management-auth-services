@@ -19,3 +19,5 @@ const createAcademicSemester = async (
 export const academicSemesterServices = {
   createAcademicSemester,
 };
+
+//test
