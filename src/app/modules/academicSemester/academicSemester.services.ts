@@ -20,4 +20,3 @@ export const academicSemesterServices = {
   createAcademicSemester,
 };
 
-//test
