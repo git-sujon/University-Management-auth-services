@@ -9,7 +9,6 @@ const handleValidatorError = (error: ZodError): IGenericErrorResponse => {
       message: issue?.message,
     };
   });
-  console.log(errors, 'zozzzzzzzzzzzzzzzzzzzzzzd');
 
   const statusCode = 500;
   return {

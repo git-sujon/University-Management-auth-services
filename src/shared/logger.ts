@@ -63,6 +63,3 @@ const errorLogger = createLogger({
 });
 
 export { infoLogger, errorLogger };
-
-// logs/winston/successes/ums-%DATE%-success.log
-// logs/winston/errors/ums-%DATE%-error.log
