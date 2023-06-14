@@ -1,0 +1,7 @@
+{
+    message: listen EADDRINUSE: address already in use :::5000,
+    level: error,
+    Project: UMS,
+    Date: Tue Jun 13 2023 ,
+    time: 21:29:28
+  }
