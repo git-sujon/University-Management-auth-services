@@ -45,7 +45,12 @@ const getAllAcademicSemesterController = catchAsync(
   }
 );
 
+// const getSingleSemesterController =() => {
+
+// }
+
 export const academicSemesterController = {
   createAcademicSemesterController,
   getAllAcademicSemesterController,
+  // getSingleSemesterController
 };

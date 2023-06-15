@@ -54,7 +54,10 @@ const getAllAcademicSemester = async (
     });
   }
 
-  const result = await AcademicSemester.find({ $and: andConditions })
+  const whereConditions =
+    andConditions.length > 0 ? { $and: andConditions } : {};
+
+  const result = await AcademicSemester.find(whereConditions)
     .sort()
     .skip(skip)
     .limit(limit);
