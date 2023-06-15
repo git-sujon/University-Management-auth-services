@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import {
   academicSemesterSearchableFields,
   academicSemesterTitleCodeMapper,
-} from './academicSemester.contant';
+} from './academicSemester.constant';
 import {
   IAcademicSemester,
   IAcademicSemesterFilter,
@@ -74,8 +74,39 @@ const getAllAcademicSemester = async (
   };
 };
 
+const getSingleSemester = async (
+  id: string
+): Promise<IAcademicSemester | null> => {
+  const result = await AcademicSemester.findById(id);
+
+  return result;
+};
+
+const updateSemester = async (
+  id: string,
+  payload: Partial<IAcademicSemester>
+): Promise<IAcademicSemester | null> => {
+  if (
+    payload.title &&
+    payload.code &&
+    academicSemesterTitleCodeMapper[payload.title] !== payload.code
+  ) {
+    throw new APIError(httpStatus.BAD_REQUEST, 'Invalid Semester code');
+  }
+
+  const result = await AcademicSemester.findByIdAndUpdate(
+    { _id: id },
+    payload,
+    { new: true }
+  );
+
+  return result;
+};
+
 export const academicSemesterServices = {
   createAcademicSemester,
   getAllAcademicSemester,
+  getSingleSemester,
+  updateSemester,
 };
 
