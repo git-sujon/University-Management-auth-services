@@ -9,7 +9,7 @@ import { ZodError } from 'zod';
 import handleZodError from '../../errors/handleZodError';
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
-  config.env === 'development'
+  config.env !== 'production'
     ? console.log('GlobalErrorHandler', error)
     : errorLogger.error('GlobalErrorHandler', error);
 

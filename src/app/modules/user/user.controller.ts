@@ -13,7 +13,7 @@ const createUserController = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Academic Semester Created Successfully',
+      message: 'User Created Successfully',
       data: result,
     });
     next();
