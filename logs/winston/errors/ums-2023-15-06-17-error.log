@@ -1,0 +1,7 @@
+{
+    message: Database connection Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.prabmlk.mongodb.net,
+    level: error,
+    Project: UMS,
+    Date: Thu Jun 15 2023 ,
+    time: 17:58:46
+  }
