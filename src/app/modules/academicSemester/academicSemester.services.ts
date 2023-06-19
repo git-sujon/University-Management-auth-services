@@ -12,6 +12,7 @@ import { AcademicSemester } from './academicSemester.model';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
+import { SortOrder } from 'mongoose';
 
 const createAcademicSemester = async (
   payload: IAcademicSemester
@@ -30,7 +31,7 @@ const getAllAcademicSemester = async (
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IAcademicSemester[]>> => {
   const { searchTerm, ...filtersData } = filters;
-  const { page, limit, skip } =
+  const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
   const andConditions = [];
@@ -46,6 +47,12 @@ const getAllAcademicSemester = async (
     });
   }
 
+  const sortCondition: { [key: string]: SortOrder } = {};
+
+  if (sortBy && sortOrder) {
+    sortCondition[sortBy] = sortOrder;
+  }
+
   if (Object.keys(filtersData).length) {
     andConditions.push({
       $and: Object.entries(filtersData).map(([field, value]) => ({
@@ -58,7 +65,7 @@ const getAllAcademicSemester = async (
     andConditions.length > 0 ? { $and: andConditions } : {};
 
   const result = await AcademicSemester.find(whereConditions)
-    .sort()
+    .sort(sortCondition)
     .skip(skip)
     .limit(limit);
 
