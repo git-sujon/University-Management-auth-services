@@ -7,7 +7,15 @@ const createAcademicFaculty = z.object({
     }),
   }),
 });
+const updateAcademicFaculty = z.object({
+  body: z.object({
+    title: z.string({
+      required_error: 'Title is Required',
+    }),
+  }),
+});
 
-export const AcademicFecultyValidation = {
+export const AcademicFacultyValidation = {
   createAcademicFaculty,
+  updateAcademicFaculty,
 };
