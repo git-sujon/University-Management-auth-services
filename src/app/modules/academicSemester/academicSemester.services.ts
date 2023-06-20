@@ -10,9 +10,8 @@ import {
 } from './academicSemester.interface';
 import { AcademicSemester } from './academicSemester.model';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-import { IGenericResponse } from '../../../interfaces/common';
+import { IGenericResponse, ISortCondition } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
-import { SortOrder } from 'mongoose';
 
 const createAcademicSemester = async (
   payload: IAcademicSemester
@@ -33,7 +32,7 @@ const getAllAcademicSemester = async (
   const { searchTerm, ...filtersData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
-
+  console.log(filtersData);
   const andConditions = [];
 
   if (searchTerm) {
@@ -47,7 +46,7 @@ const getAllAcademicSemester = async (
     });
   }
 
-  const sortCondition: { [key: string]: SortOrder } = {};
+  const sortCondition: ISortCondition = {};
 
   if (sortBy && sortOrder) {
     sortCondition[sortBy] = sortOrder;

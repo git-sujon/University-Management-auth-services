@@ -1,3 +1,4 @@
+import { SortOrder } from 'mongoose';
 import { IGenericErrorMessage } from './error';
 
 export type IGenericErrorResponse = {
@@ -14,3 +15,5 @@ export type IGenericResponse<T> = {
   };
   data: T;
 };
+
+export type ISortCondition = { [key: string]: SortOrder };
