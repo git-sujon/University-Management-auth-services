@@ -8,7 +8,7 @@ import {
 const createAcademicSemesterSchema = z.object({
   body: z.object({
     title: z.enum([...academicSemesterTitles] as [string, ...string[]], {
-      required_error: 'tile is Required',
+      required_error: 'title is Required',
     }),
     year: z.number({
       required_error: 'year is Required',

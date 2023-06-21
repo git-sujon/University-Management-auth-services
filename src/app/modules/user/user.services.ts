@@ -2,12 +2,15 @@ import config from '../../../config/index';
 import APIError from '../../../errors/ApiErrors';
 import { IUser } from './user.interface';
 import { User } from './user.model';
-import { generatedUserID } from './user.util';
+import { generateStudentID } from './user.util';
 
 const createUser = async (user: IUser): Promise<IUser | null> => {
   // default increment ID
-
-  const id = await generatedUserID();
+  const semester = {
+    code: '01',
+    year: '2025',
+  };
+  const id = await generateStudentID(semester);
 
   user.id = id;
 
@@ -25,6 +28,12 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
   return creteUser;
 };
 
-export const userServices = {
+const getAllUsers = async () => {
+  const result = await User.find();
+  return result;
+};
+
+export const UserServices = {
   createUser,
+  getAllUsers,
 };
