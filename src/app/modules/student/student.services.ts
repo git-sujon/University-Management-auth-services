@@ -1,14 +1,10 @@
-import APIError from '../../../errors/ApiErrors';
-import httpStatus from 'http-status';
-
-
-
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse, ISortCondition } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
-import { IStudent } from './student.interface';
+import { IStudent, IStudentFilter } from './student.interface';
 
-
+import { Student } from './student.model';
+import { studentSearchableFields } from './student.constant';
 const getAllStudent = async (
   filters: IStudentFilter,
   paginationOptions: IPaginationOptions
@@ -16,24 +12,18 @@ const getAllStudent = async (
   const { searchTerm, ...filtersData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
-  console.log(filtersData);
+
   const andConditions = [];
 
   if (searchTerm) {
     andConditions.push({
-      $or: StudentSearchableFields.map(field => ({
+      $or: studentSearchableFields.map(field => ({
         [field]: {
           $regex: searchTerm,
           $options: 'i',
         },
       })),
     });
-  }
-
-  const sortCondition: ISortCondition = {};
-
-  if (sortBy && sortOrder) {
-    sortCondition[sortBy] = sortOrder;
   }
 
   if (Object.keys(filtersData).length) {
@@ -44,15 +34,23 @@ const getAllStudent = async (
     });
   }
 
+  const sortConditions: ISortCondition = {};
+
+  if (sortBy && sortOrder) {
+    sortConditions[sortBy] = sortOrder;
+  }
   const whereConditions =
     andConditions.length > 0 ? { $and: andConditions } : {};
 
   const result = await Student.find(whereConditions)
-    .sort(sortCondition)
+    .populate('academicDepartment')
+    .populate('academicFaculty')
+    .populate('academicSemester')
+    .sort(sortConditions)
     .skip(skip)
     .limit(limit);
 
-  const total = await Student.countDocuments();
+  const total = await Student.countDocuments(whereConditions);
 
   return {
     meta: {
@@ -64,46 +62,37 @@ const getAllStudent = async (
   };
 };
 
-const getSingleSemester = async (
-  id: string
-): Promise<IStudent | null> => {
-  const result = await Student.findById(id);
+const getSingleStudent = async (id: string): Promise<IStudent | null> => {
+  const result = await Student.findById(id)
+    .populate('academicDepartment')
+    .populate('academicFaculty')
+    .populate('academicSemester');
 
   return result;
 };
 
-const updateSemester = async (
+const updateStudent = async (
   id: string,
   payload: Partial<IStudent>
 ): Promise<IStudent | null> => {
-  if (
-    payload.title &&
-    payload.code &&
-    StudentTitleCodeMapper[payload.title] !== payload.code
-  ) {
-    throw new APIError(httpStatus.BAD_REQUEST, 'Invalid Semester code');
-  }
-
-  const result = await Student.findByIdAndUpdate(
-    { _id: id },
-    payload,
-    { new: true }
-  );
+  const result = await Student.findByIdAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
 
   return result;
 };
 
-const deleteSemester = async (
-  id: string
-): Promise<IStudent | null> => {
-  const result = await Student.findByIdAndDelete(id);
+const deleteStudent = async (id: string): Promise<IStudent | null> => {
+  const result = await Student.findByIdAndDelete(id)
+    .populate('academicDepartment')
+    .populate('academicFaculty')
+    .populate('academicSemester');
   return result;
 };
 
 export const studentServices = {
-
   getAllStudent,
-  getSingleSemester,
-  updateSemester,
-  deleteSemester,
+  getSingleStudent,
+  updateStudent,
+  deleteStudent,
 };

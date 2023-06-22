@@ -10,7 +10,7 @@ export const bloodGroupConstants = [
   'O-',
 ];
 
-export const semesterSearchableFields = [
+export const studentSearchableFields = [
   'id',
   'name.firstName',
   'name.middleName',
@@ -26,18 +26,11 @@ export const semesterSearchableFields = [
   'localGuardian.address',
 ];
 
-export const semesterFilterableFields = [
+export const studentFilterableFields = [
+  'searchTerm',
   'id',
-  'name.firstName',
-  'name.middleName',
-  'name.lastName',
+
   'email',
   'contactNumber',
   'bloodGroup',
-  'presentAddress',
-  'guardian.fatherName',
-  'guardian.motherName',
-  'guardian.address',
-  'localGuardian.name',
-  'localGuardian.address',
 ];

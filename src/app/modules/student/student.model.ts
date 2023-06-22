@@ -1,13 +1,14 @@
 import { Schema, model } from 'mongoose';
 import { bloodGroupConstants, genderConstants } from './student.constant';
+import { IStudent, StudentModel } from './student.interface';
 
-export const studentSchema = new Schema(
+export const studentSchema = new Schema<IStudent, StudentModel>(
   {
     id: {
-        type: String,
-        required: true,
-        unique: true,
-      },
+      type: String,
+      required: true,
+      unique: true,
+    },
     name: {
       required: true,
       type: {
@@ -129,4 +130,4 @@ export const studentSchema = new Schema(
   { timestamps: true, toJSON: { virtuals: true } }
 );
 
-export const Student = model('Student', studentSchema);
+export const Student = model<IStudent, StudentModel>('Student', studentSchema);

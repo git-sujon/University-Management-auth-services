@@ -5,15 +5,14 @@ import sendResponse from '../../../shared/sendResponse';
 import httpStatus from 'http-status';
 import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
-import { semesterSearchableFields } from './student.constant';
+
 import { IStudent } from './student.interface';
 import { studentServices } from './student.services';
-
-
+import { studentSearchableFields } from './student.constant';
 
 const getAllStudentController = catchAsync(
   async (req: Request, res: Response) => {
-    const filters = pick(req.query, semesterSearchableFields);
+    const filters = pick(req.query, studentSearchableFields);
     const paginationOptions = pick(req.query, paginationFields);
 
     const result = await studentServices.getAllStudent(
@@ -33,7 +32,7 @@ const getAllStudentController = catchAsync(
 const getSingleStudentController = catchAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
-    const result = await StudentServices.getSingleStudent(id);
+    const result = await studentServices.getSingleStudent(id);
 
     sendResponse<IStudent>(res, {
       statusCode: httpStatus.OK,
@@ -43,14 +42,27 @@ const getSingleStudentController = catchAsync(
     });
   }
 );
+const updateStudentController = catchAsync(
+  async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const updatedData = req.body;
 
+    const result = await studentServices.updateStudent(id, updatedData);
 
+    sendResponse<IStudent>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Academic Student Updated Successfully',
+      data: result,
+    });
+  }
+);
 
 const deleteStudentController = catchAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
 
-    const result = await StudentServices.deleteStudent(id);
+    const result = await studentServices.deleteStudent(id);
 
     sendResponse<IStudent>(res, {
       statusCode: httpStatus.OK,
@@ -61,10 +73,9 @@ const deleteStudentController = catchAsync(
   }
 );
 
-
-
-export const StudentController ={
-    getAllStudentController,
-    getSingleStudentController,
-    deleteStudentController,
-}
+export const StudentController = {
+  getAllStudentController,
+  getSingleStudentController,
+  updateStudentController,
+  deleteStudentController,
+};
