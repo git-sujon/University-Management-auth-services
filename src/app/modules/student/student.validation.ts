@@ -2,9 +2,7 @@ import { z } from 'zod';
 import { bloodGroupConstants, genderConstants } from './student.constant';
 
 const createStudentValidation = z.object({
-  userId: z.string({
-    required_error: 'User ID is required',
-  }),
+
   name: z.object({
     firstName: z.string({
       required_error: 'First name is required',

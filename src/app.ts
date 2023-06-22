@@ -33,15 +33,6 @@ app.use((req: Request, res: Response) => {
   });
 });
 
-// const academic = {
-//   code:'01',
-//   year:'2025'
-// }
 
-const testId = async () => {
-  const generateId = await generateFacultyID();
-  console.log(generateId);
-};
-testId();
 
 export default app;

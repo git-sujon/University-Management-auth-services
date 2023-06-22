@@ -8,7 +8,7 @@ const router = express.Router();
 router.post(
   '/create-student',
   validateRequest(userValidation.createUserSchema),
-  UserController.createUserController
+  UserController.createStudentController
 );
 
 router.get('/', UserController.getAllUserController);

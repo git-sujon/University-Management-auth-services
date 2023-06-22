@@ -23,7 +23,7 @@ type ILocalGuardian = {
 };
 
 export type IStudent = {
-  userId: string;
+  id: string;
   name: IName;
   gender: GenderEnum;
   dateOfBirth: string;
