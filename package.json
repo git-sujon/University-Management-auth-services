@@ -11,7 +11,7 @@
     "lint-prettier": "yarn lint:check && yarn prettier:check"
   },
   "repository": "https://github.com/git-sujon/University-Management-auth-services.git",
-  "author": "<git.sujon@gmail.com>",
+  "author": "Moniruzzaman Sujon <git.sujon@gmail.com>",
   "license": "MIT",
   "lint-staged": {
     "src/**/*.ts": "yarn lint-prettier"

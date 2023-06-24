@@ -45,6 +45,7 @@ const getSingleStudentController = catchAsync(
 const updateStudentController = catchAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
+
     const updatedData = req.body;
 
     const result = await studentServices.updateStudent(id, updatedData);
@@ -52,7 +53,7 @@ const updateStudentController = catchAsync(
     sendResponse<IStudent>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Academic Student Updated Successfully',
+      message: 'Student Updated Successfully',
       data: result,
     });
   }

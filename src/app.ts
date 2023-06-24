@@ -3,7 +3,6 @@ import cors from 'cors';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import routers from './app/routes';
 import httpStatus from 'http-status';
-import { generateFacultyID } from './app/modules/user/user.util';
 
 const app = express();
 
@@ -32,7 +31,5 @@ app.use((req: Request, res: Response) => {
     ],
   });
 });
-
-
 
 export default app;
