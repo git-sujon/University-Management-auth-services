@@ -4,7 +4,7 @@ import {
   genderConstants,
 } from '../../../interfaces/constants';
 
-const createStudentSchema = z.object({
+const createStudentValidationSchema = z.object({
   body: z.object({
     password: z.string().optional(),
 
@@ -93,7 +93,8 @@ const createStudentSchema = z.object({
     }),
   }),
 });
-const createFacultySchema = z.object({
+
+const createFacultyValidationSchema = z.object({
   body: z.object({
     password: z.string().optional(),
 
@@ -149,7 +150,60 @@ const createFacultySchema = z.object({
   }),
 });
 
+const createAdminValidationSchema = z.object({
+  body: z.object({
+    password: z.string().optional(),
+    admin: z.object({
+      name: z.object({
+        firstName: z.string().refine(val => val.trim() !== '', {
+          message: 'First name is required',
+        }),
+        middleName: z.string().optional(),
+        lastName: z.string().refine(val => val.trim() !== '', {
+          message: 'Last name is required',
+        }),
+      }),
+      profileImage: z.string().refine(val => val.trim() !== '', {
+        message: 'Profile image is required',
+      }),
+      dateOfBirth: z.string().optional(),
+      email: z
+        .string()
+        .email()
+        .refine(val => val.trim() !== '', {
+          message: 'Email is required',
+        }),
+      contactNo: z.string().refine(val => val.trim() !== '', {
+        message: 'Contact number is required',
+      }),
+      emergencyContactNo: z.string().refine(val => val.trim() !== '', {
+        message: 'Emergency contact number is required',
+      }),
+      gender: z
+        .enum([...genderConstants] as [string, ...string[]])
+        .optional()
+        .refine(val => val !== undefined, {
+          message: 'Gender is required',
+        }),
+      permanentAddress: z.string().optional(),
+      presentAddress: z.string().optional(),
+      bloodGroup: z
+        .enum([...bloodGroupConstants] as [string, ...string[]])
+        .refine(val => val !== undefined, {
+          message: 'Blood group is required',
+        }),
+      managementDepartment: z.string().refine(val => val.trim() !== '', {
+        message: 'Management department is required',
+      }),
+      designation: z.string().refine(val => val.trim() !== '', {
+        message: 'Designation is required',
+      }),
+    }),
+  }),
+});
+
 export const userValidation = {
-  createStudentSchema,
-  createFacultySchema,
+  createStudentValidationSchema,
+  createFacultyValidationSchema,
+  createAdminValidationSchema,
 };

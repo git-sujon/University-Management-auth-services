@@ -5,10 +5,16 @@ import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { IStudent } from '../student/student.interface';
 import { IUser } from './user.interface';
 import { User } from './user.model';
-import { generateFacultyID, generateStudentID } from './user.util';
+import {
+  generateAdminId,
+  generateFacultyID,
+  generateStudentID,
+} from './user.util';
 import { Student } from '../student/student.model';
 import httpStatus from 'http-status';
 import { Faculty } from '../faculty/faculty.model';
+import { IAdmin } from '../admin/admin.interface';
+import { Admin } from '../admin/admin.model';
 
 const createStudent = async (
   student: IStudent,
@@ -101,7 +107,7 @@ const createFaculty = async (
 
   // default DEFAULT_PASSWORD
   if (!user.password) {
-    user.password = config.default_student_password as string;
+    user.password = config.default_faculty_password as string;
   }
 
   // set Role
@@ -166,13 +172,67 @@ const createFaculty = async (
   return creteUser;
 };
 
+const createAdmin = async (
+  admin: IAdmin,
+  user: IUser
+): Promise<IUser | null> => {
+  // default increment ID
+
+  // default DEFAULT_PASSWORD
+  if (!user.password) {
+    user.password = config.default_admin_password as string;
+  }
+
+  // set Role
+  user.role = 'admin';
+
+  // generate student id
+
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    const generatedId = await generateAdminId();
+    user.id = generatedId;
+    admin.id = generatedId;
+
+    const newAdmin = await Admin.create([admin], { session });
+
+    if (!newAdmin.length) {
+      throw new APIError(httpStatus.BAD_REQUEST, 'Failed to Create Admin');
+    }
+
+    user.admin = newAdmin[0]._id;
+    const newUser = await User.create([user], { session });
+
+    if (!newUser.length) {
+      throw new APIError(httpStatus.BAD_REQUEST, 'Failed to create User');
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw error;
+  }
+
+  const creteUser = await User.create(user);
+
+  if (!creteUser) {
+    throw new APIError(400, 'Failed to created a user!');
+  }
+
+  return creteUser;
+};
+
 const getAllUsers = async () => {
   const result = await User.find();
   return result;
 };
 
 export const UserServices = {
-  createStudent,
   getAllUsers,
+  createStudent,
   createFaculty,
+  createAdmin,
 };

@@ -31,4 +31,5 @@ export type IFacultyFilter = {
   email?: string;
   contactNo?: string;
   bloodGroup?: BloodGroupEnum;
+  designation?: string;
 };
