@@ -29,6 +29,7 @@ const createStudent = async (
 
   // set Role
   user.role = 'student';
+  user.needPasswordChange = true;
 
   const academicSemester = await AcademicSemester.findById(
     student.academicSemester
@@ -187,7 +188,7 @@ const createAdmin = async (
   user.role = 'admin';
 
   // generate student id
-
+  let newUserAllData = null;
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -207,7 +208,7 @@ const createAdmin = async (
     if (!newUser.length) {
       throw new APIError(httpStatus.BAD_REQUEST, 'Failed to create User');
     }
-
+    newUserAllData = newUser[0];
     await session.commitTransaction();
     await session.endSession();
   } catch (error) {
@@ -220,6 +221,16 @@ const createAdmin = async (
 
   if (!creteUser) {
     throw new APIError(400, 'Failed to created a user!');
+  }
+  if (newUserAllData) {
+    newUserAllData = await User.findOne({ id: newUserAllData.id }).populate({
+      path: 'faculty',
+      populate: [
+        {
+          path: 'managementDepartment',
+        },
+      ],
+    });
   }
 
   return creteUser;

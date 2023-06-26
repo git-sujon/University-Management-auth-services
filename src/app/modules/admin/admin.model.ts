@@ -59,6 +59,7 @@ const adminSchema = new Schema<IAdmin, AdminModel>(
       type: String,
       enum: bloodGroupConstants,
     },
+
     managementDepartment: {
       type: Schema.Types.ObjectId,
       ref: 'ManagementDepartment',

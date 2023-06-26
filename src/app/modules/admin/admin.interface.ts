@@ -23,6 +23,7 @@ export type IAdmin = {
   bloodGroup?: BloodGroupEnum;
 
   managementDepartment: Types.ObjectId;
+
   designation: string;
 };
 
