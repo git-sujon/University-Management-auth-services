@@ -8,7 +8,7 @@ const userSchema = new Schema<IUser, UserModel>(
     id: { type: String, required: true, unique: true },
     role: { type: String, required: true },
     password: { type: String, required: true, select: 0 },
-    needPasswordChange: { type: Boolean, required: true },
+    needPasswordChange: { type: Boolean, default: true },
     student: { type: Schema.Types.ObjectId, ref: 'Student' },
     faculty: { type: Schema.Types.ObjectId, ref: 'Faculty' },
     admin: { type: Schema.Types.ObjectId, ref: 'Admin' },
@@ -20,10 +20,13 @@ const userSchema = new Schema<IUser, UserModel>(
 
 userSchema.statics.isUserExist = async function (
   id: string
-): Promise<Pick<IUser, 'id' | 'password' | 'needPasswordChange'> | null> {
+): Promise<Pick<
+  IUser,
+  'id' | 'password' | 'role' | 'needPasswordChange'
+> | null> {
   return await User.findOne(
     { id },
-    { id: 1, password: 1, needPasswordChange: 1 }
+    { id: 1, password: 1, role: 1, needPasswordChange: 1 }
   );
 };
 

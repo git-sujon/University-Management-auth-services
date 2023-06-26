@@ -29,7 +29,6 @@ const createStudent = async (
 
   // set Role
   user.role = 'student';
-  user.needPasswordChange = true;
 
   const academicSemester = await AcademicSemester.findById(
     student.academicSemester
