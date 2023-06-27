@@ -9,8 +9,9 @@ const router = express.Router();
 
 router.post(
   '/',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+
   validateRequest(AcademicFacultyValidation.createAcademicFaculty),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   AcademicFacultyController.createFacultyController
 );
 router.get(
@@ -25,12 +26,13 @@ router.get(
 );
 router.patch(
   '/:id',
+
+  validateRequest(AcademicFacultyValidation.updateAcademicFaculty),
   auth(
     ENUM_USER_ROLE.SUPER_ADMIN,
     ENUM_USER_ROLE.ADMIN,
     ENUM_USER_ROLE.FACULTY
   ),
-  validateRequest(AcademicFacultyValidation.updateAcademicFaculty),
   AcademicFacultyController.UpdateFacultyController
 );
 router.delete(
