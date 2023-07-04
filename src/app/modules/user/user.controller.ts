@@ -7,7 +7,6 @@ import httpStatus from 'http-status';
 const createStudentController = catchAsync(
   async (req: Request, res: Response) => {
     const { student, ...userData } = req.body;
-    console.log(req.cookies, "cookies")
 
     const result = await UserServices.createStudent(student, userData);
 

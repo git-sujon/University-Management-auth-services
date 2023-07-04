@@ -9,7 +9,11 @@ export type ILoginResponse = {
   needPasswordChange: boolean;
 };
 
+export type IJwtRefreshTokenResponse = {
+  accessToken: string;
+};
 
-export type IJwtRefreshTokenResponse={
-  accessToken:string
-}
+export type IChangePassword = {
+  oldPassword: string;
+  newPassword: string;
+};
