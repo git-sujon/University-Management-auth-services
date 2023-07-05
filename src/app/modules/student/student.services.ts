@@ -7,6 +7,8 @@ import { Student } from './student.model';
 import { studentSearchableFields } from './student.constant';
 import APIError from '../../../errors/ApiErrors';
 import httpStatus from 'http-status';
+import mongoose from 'mongoose';
+import { User } from '../user/user.model';
 const getAllStudent = async (
   filters: IStudentFilter,
   paginationOptions: IPaginationOptions
@@ -130,11 +132,32 @@ const updateStudent = async (
 };
 
 const deleteStudent = async (id: string): Promise<IStudent | null> => {
-  const result = await Student.findByIdAndDelete(id)
-    .populate('academicDepartment')
-    .populate('academicFaculty')
-    .populate('academicSemester');
-  return result;
+  const isExist = await Student.findOne({ id });
+
+  if (!isExist) {
+    throw new APIError(httpStatus.NOT_FOUND, 'Student Not Found');
+  }
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+    const student = await Student.findOneAndDelete({ id }, { session });
+
+    if (!student) {
+      throw new APIError(httpStatus.NOT_FOUND, "Student Can't Delete");
+    }
+
+    // delete user
+    await User.deleteOne({ id });
+    session.commitTransaction();
+    session.endSession();
+
+    return student;
+  } catch (error) {
+    session.abortTransaction();
+    throw error;
+  }
 };
 
 export const studentServices = {
