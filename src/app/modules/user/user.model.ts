@@ -9,6 +9,7 @@ const userSchema = new Schema<IUser, UserModel>(
     role: { type: String, required: true },
     password: { type: String, required: true, select: 0 },
     needPasswordChange: { type: Boolean, default: true },
+    passwordChangeAt: { type: Date },
     student: { type: Schema.Types.ObjectId, ref: 'Student' },
     faculty: { type: Schema.Types.ObjectId, ref: 'Faculty' },
     admin: { type: Schema.Types.ObjectId, ref: 'Admin' },
@@ -38,12 +39,15 @@ userSchema.statics.isMatchPassword = async function (
 };
 
 // hashing password
-
+// User.save() or user.create()
 userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(
     this.password,
     Number(config.bcrypt_salt_rounds)
   );
+  // if (!this.needPasswordChange) {
+  //   this.passwordChangeAt = new Date();
+  // }
   next();
 });
 

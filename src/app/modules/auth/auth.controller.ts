@@ -53,13 +53,12 @@ const changePasswordController = catchAsync(
     const user = req.user;
     const { ...bothPassword } = req.body;
 
-    const result = await AuthServices.changePassword(user, bothPassword);
+    await AuthServices.changePassword(user, bothPassword);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: 'Password change successfully',
-      data: result,
     });
   }
 );

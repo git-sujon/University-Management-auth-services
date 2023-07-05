@@ -88,7 +88,7 @@ const createRefreshToken = async (
 const changePassword = async (
   user: JwtPayload,
   bothPassword: IChangePassword
-) => {
+): Promise<void> => {
   const { userId } = user;
   const { oldPassword, newPassword } = bothPassword;
   const userData = await User.isUserExist(userId);
@@ -108,12 +108,14 @@ const changePassword = async (
     Number(config.bcrypt_salt_rounds)
   ));
 
-  const result = await User.updateOne(
+  await User.updateOne(
     { id: userId },
     { password: updatedPassword, needPasswordChange: false },
-    { new: true }
+    { passwordChangeAt: new Date() }
   );
-  return result;
+  // userData.password= newPassword
+  // userData.needPasswordChange=false
+  // userData.save()
 };
 
 export const AuthServices = {
