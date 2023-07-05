@@ -8,6 +8,8 @@ import { Admin } from './admin.model';
 import APIError from '../../../errors/ApiErrors';
 import httpStatus from 'http-status';
 import { adminSearchableFields } from './admin.constant';
+import mongoose from 'mongoose';
+import { User } from '../user/user.model';
 
 const getAllAdmin = async (
   filters: IAdminFilters,
@@ -104,8 +106,32 @@ const updateAdmin = async (
 };
 
 const deleteAdmin = async (id: string): Promise<IAdmin | null> => {
-  const result = await Admin.findByIdAndDelete(id);
-  return result;
+  const isExist = await Admin.findOne({ id });
+
+  if (!isExist) {
+    throw new APIError(httpStatus.NOT_FOUND, 'Admin Not Found');
+  }
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+    const student = await Admin.findOneAndDelete({ id }, { session });
+
+    if (!student) {
+      throw new APIError(httpStatus.NOT_FOUND, "Admin Can't Delete");
+    }
+
+    // delete user
+    await User.deleteOne({ id });
+    session.commitTransaction();
+    session.endSession();
+
+    return student;
+  } catch (error) {
+    session.abortTransaction();
+    throw error;
+  }
 };
 
 export const AdminServices = {

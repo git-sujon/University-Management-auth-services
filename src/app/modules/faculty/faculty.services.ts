@@ -7,6 +7,8 @@ import { Faculty } from './faculty.model';
 import APIError from '../../../errors/ApiErrors';
 import httpStatus from 'http-status';
 import { facultySearchableFields } from './faculty.constant';
+import mongoose from 'mongoose';
+import { User } from '../user/user.model';
 
 const getAllFaculty = async (
   filters: IFacultyFilter,
@@ -107,10 +109,32 @@ const updateFaculty = async (
 };
 
 const deleteFaculty = async (id: string): Promise<IFaculty | null> => {
-  const result = await Faculty.findByIdAndDelete(id)
-    .populate('academicDepartment')
-    .populate('academicFaculty');
-  return result;
+  const isExist = await Faculty.findOne({ id });
+
+  if (!isExist) {
+    throw new APIError(httpStatus.NOT_FOUND, 'Faculty Not Found');
+  }
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+    const student = await Faculty.findOneAndDelete({ id }, { session });
+
+    if (!student) {
+      throw new APIError(httpStatus.NOT_FOUND, "Faculty Can't Delete");
+    }
+
+    // delete user
+    await User.deleteOne({ id });
+    session.commitTransaction();
+    session.endSession();
+
+    return student;
+  } catch (error) {
+    session.abortTransaction();
+    throw error;
+  }
 };
 
 export const FacultyServices = {
