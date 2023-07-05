@@ -28,16 +28,12 @@ router.patch(
   '/:id',
 
   validateRequest(AcademicFacultyValidation.updateAcademicFaculty),
-  auth(
-    ENUM_USER_ROLE.SUPER_ADMIN,
-    ENUM_USER_ROLE.ADMIN,
-    ENUM_USER_ROLE.FACULTY
-  ),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   AcademicFacultyController.UpdateFacultyController
 );
 router.delete(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN),
   AcademicFacultyController.deleteFacultyController
 );
 
