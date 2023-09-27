@@ -28,7 +28,7 @@ router.post(
 
 router.get(
   '/',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN),
+  // auth(ENUM_USER_ROLE.SUPER_ADMIN),
   UserController.getAllUserController
 );
 

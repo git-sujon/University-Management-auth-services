@@ -50,7 +50,7 @@ const refreshTokenController = catchAsync(
 
 const changePasswordController = catchAsync(
   async (req: Request, res: Response) => {
-    const user = req.user;
+    const user = (req as any).user;
     const { ...bothPassword } = req.body;
 
     await AuthServices.changePassword(user, bothPassword);
